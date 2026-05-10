@@ -3,6 +3,8 @@ package HotelManagementSystem;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static com.sun.beans.introspect.PropertyInfo.Name.description;
+
 public class RoomController {
 
     public static void AddNewRoom(ArrayList<Room> rooms, Scanner scanner) {
@@ -18,7 +20,7 @@ public class RoomController {
         double price = scanner.nextDouble();
         int id = 1000 + rooms.size();
         Room room = new Room(id, floor, capacity, type, description, price);
-        room.add(room);
+        rooms.add(room);
         System.out.println("Room added successfully!");
         System.out.println();
     }
@@ -35,7 +37,6 @@ public class RoomController {
     public static void editRoom(ArrayList<Room> rooms,Scanner scanner) {
         System.out.println("Enter room id : \n-1 to show all rooms");
         int id = scanner.nextInt();
-        int id;
         if(id==-1){
             showAllRooms(rooms);
             System.out.println("Enter room id : \n-1 to show all rooms");
@@ -49,15 +50,15 @@ public class RoomController {
         if(floor==-1) floor = room.getFloor();
 
         System.out.println("Enter capacity (int) = \n-1 to keep it");
-        int capacity = scanner.next();
-        int (capacity == -1) capacity = room.getCapacity();
+        int capacity = scanner.nextInt();
+        if (capacity == -1) capacity = room.getCapacity();
 
         System.out.println("Enter room type (String) : \n-1 to keep it");
         String type = scanner.next();
         if(type.equals("-1")) type = room.getType();
 
         System.out.println("Enter room description (String): \n-1 to keep it");
-        String type = scanner.next();
+        String description = scanner.next();
         if (description.equals("-1")) description = room.getDescription();
 
         System.out.println("Enter room price (double) : \n-1 to keep it");
