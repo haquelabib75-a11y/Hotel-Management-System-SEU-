@@ -12,7 +12,7 @@ public class Room {
     private double price;
     private ArrayList<String> reservedDates;
 
-    public Room(int id, int floor, int capacity,String type, String description, double price, boolean available) {
+    public Room(int id, int floor, int capacity,String type, String description, double price) {
         this.id= id;
         this.floor= floor;
         this.capacity= capacity;

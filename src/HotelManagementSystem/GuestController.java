@@ -1,7 +1,10 @@
+package HotelManagementSystem;
+
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class GuestsController {
+public class GuestController {
     public static void addNewGuest(ArrayList<Guest> guests, Scanner scanner) {
 
         System.out.print("Enter Guest Name: ");
@@ -31,30 +34,66 @@ public class GuestsController {
         System.out.print("Enter Guest Name: ");
         String name = scanner.next();
         System.out.println();
+
+        boolean found = false;
         for (Guest guest : guests) {
-            if (guest.getname().equals(name)) {
+            if (guest.getName().equals(name)) {
                 guest.print();
-                System.out.println();
+                found = true;
             }
+        }
+
+        if (!found) {
+            System.out.println("No guest found with name: " + name);
         }
     }
     public static void editGuest(ArrayList<Guest> guests, Scanner scanner) {
-        System.out.println("Enter id (int):\n-1 to search by name ");
-        int id = scanner.nextInt();
+        if (guests.isEmpty()) {
+            System.out.println("No guests available to edit!");
+            return;
+        }
+
+        int id = -1;  // DECLARE ID HERE - outside try-catch
+
+        System.out.println("Enter id (int):");
+        System.out.println("(-1 to search by name)");
+
+        try {
+            id = scanner.nextInt();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input! Please enter a valid integer number.");
+            scanner.nextLine();
+            return;
+        }
+
         if (id == -1) {
             searchGuestByName(guests, scanner);
             System.out.println("Enter id (int): ");
-            id = scanner.nextInt();
+            try {
+                id = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a valid integer number.");
+                scanner.nextLine();
+                return;
+            }
+        }
 
+        // NOW this will work because id is declared
+        if (id >= guests.size() || id < 0) {
+            System.out.println("Guest not found! No guest exists with ID: " + id);
+            System.out.println("Available guest IDs: 0 to " + (guests.size() - 1));
+            return;
         }
         Guest guest = guests.get(id);
-        System.out.println("Enter Name:\n-1 to keep it ");
+        System.out.println("Enter Name:\nType -1 to keep it ");
         String name = scanner.next();
-        if (name.equals("-1"))name = guest.getname();
-        System.out.println("Enter Email:\n-1 to keep it ");
+        if (name.equals("-1"))name = guest.getName();
+        System.out.println("Enter Email:\nType -1 to keep it ");
         String email = scanner.next();
         if (email.equals("-1"))email = guest.getEmail();
-        System.out.println("Enter Discount(int):\n-1 to keep it ");
+        System.out.println("Enter Discount(int):\nType -1 to keep it ");
         int discount = scanner.nextInt();
         if (discount == -1) discount = guest.getDiscount();
 

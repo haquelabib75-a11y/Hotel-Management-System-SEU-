@@ -40,6 +40,9 @@ public class Reservation {
     public String getStatus() {
         return status;
     }
+    public Guest getGuest(){
+        return guest;
+    }
     public Room getRoom() {
         return room;
     }
@@ -65,6 +68,16 @@ public class Reservation {
         System.out.println("\n------------------------------");
         System.out.println("Arrival Date: "+ arrivalDate.format(formatter));
         System.out.println("Departure Date: "+ departureDate.format(formatter));
-
+        int days= Period.between(arrivalDate,departureDate).getDays();
+        System.out.println(days + "Days");
+        System.out.println("******* Guest Informations ************");
+        guest.print();
+        System.out.println("******* Room Informations *************");
+        room.print();
+        System.out.println("*******        Total      *************");
+        double price=days*room.getPrice();
+        System.out.println("Price: "+price);
+        System.out.println("Total after discount "+this.price );
+        System.out.println("*************************************\n");
     }
 }

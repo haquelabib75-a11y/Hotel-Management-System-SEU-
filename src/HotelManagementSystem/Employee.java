@@ -35,6 +35,9 @@ public class Employee {
     public void setSalary(double salary) {
         this.salary=salary;
     }
+    public void setJob(String job){
+        this.job=job;
+    }
     public void print() {
         System.out.println("\n-------------------");
         System.out.println("id: "+id);
