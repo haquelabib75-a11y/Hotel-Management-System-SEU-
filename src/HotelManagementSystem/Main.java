@@ -1,6 +1,7 @@
 package HotelManagementSystem;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.Period;
 
@@ -41,16 +42,28 @@ public class Main {
             System.out.println("14. Add a new employee");
             System.out.println("15. Show all employees");
             System.out.println("16. Edit employee data");
-            System.out.println("17. Request Hotel Service1");
+            System.out.println("17. Request Hotel Service");
             System.out.println("18. Show All Services");
             System.out.println("19. Generate Final Bill");
             System.out.println("20. Exit");
             System.out.print("Enter your choice: ");
 
-            i = scanner.nextInt();
-            scanner.nextLine();
+            while (true) {
+                try {
+                    i = scanner.nextInt();
+                    scanner.nextLine();
+                    if (i >= 1 && i <= 20) {
+                        break;
+                    } else {
+                        System.out.println(" Please enter a number between 1 and 20!");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println(" Invalid input! Please enter a NUMBER between 1 and 20.");
+                    scanner.nextLine();
+                }
+            }
 
-            switch(i) {
+            switch (i) {
                 case 1:
                     RoomController.AddNewRoom(rooms, scanner);
                     break;
@@ -137,14 +150,29 @@ public class Main {
 
     public static void requestHotelService(Scanner scanner, ArrayList<HotelService> hotelServices) {
 
-        System.out.println("    AVAILABLE SERVICES        ");
-        System.out.println(" 1. Food Delivery             ");
-        System.out.println(" 2. Laundry Service           ");
-        System.out.println(" 3. Back to Menu              ");
-        System.out.print("Choose service: ");
+        System.out.println("       AVAILABLE SERVICES       ");
+        System.out.println(" ══════════════════════════════ ");
+        System.out.println("  1. Food Delivery              ");
+        System.out.println("  2. Laundry Service            ");
+        System.out.println("  3. Back to Menu               ");
+        System.out.println(" ══════════════════════════════ ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = 0;
+        while (true) {
+            try {
+                System.out.print("Choose service: ");
+                choice = scanner.nextInt();
+                scanner.nextLine();
+                if (choice >= 1 && choice <= 3) {
+                    break;
+                } else {
+                    System.out.println(" Please enter 1, 2, or 3!");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println(" Invalid input! Please enter a NUMBER (1, 2, or 3).");
+                scanner.nextLine();
+            }
+        }
 
         if (choice == 3) return;
 
@@ -157,27 +185,80 @@ public class Main {
         if (choice == 1) {
             System.out.print("Enter food item name: ");
             String food = scanner.nextLine();
-            System.out.print("Enter price per item: $");
-            double itemPrice = scanner.nextDouble();
-            System.out.print("Enter quantity: ");
-            int qty = scanner.nextInt();
+
+            double itemPrice = 0;
+            while (true) {
+                try {
+                    System.out.print("Enter price per item: ");
+                    itemPrice = scanner.nextDouble();
+                    if (itemPrice > 0) {
+                        break;
+                    } else {
+                        System.out.println("  Price must be greater than 0!");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("  Invalid input! Please enter a valid number (e.g., 10.99)");
+                    scanner.nextLine();
+                }
+            }
+
+            int qty = 0;
+            while (true) {
+                try {
+                    System.out.print("Enter quantity: ");
+                    qty = scanner.nextInt();
+                    if (qty > 0) {
+                        break;
+                    } else {
+                        System.out.println("  Quantity must be at least 1!");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("  Invalid input! Please enter a valid NUMBER.");
+                    scanner.nextLine();
+                }
+            }
+
             service = new FoodDelivery(serviceId, roomNo, food, qty, itemPrice);
 
         } else if (choice == 2) {
-            System.out.print("Enter number of clothing items: ");
-            int items = scanner.nextInt();
-            System.out.print("Enter price per item: $");
-            double pricePerItem = scanner.nextDouble();
-            service = new Laundry(serviceId, roomNo, items, pricePerItem);
+            int items = 0;
+            while (true) {
+                try {
+                    System.out.print("Enter number of clothing items: ");
+                    items = scanner.nextInt();
+                    if (items > 0) {
+                        break;
+                    } else {
+                        System.out.println("  Number of items must be at least 1!");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("  Invalid input! Please enter a valid NUMBER.");
+                    scanner.nextLine();
+                }
+            }
 
-        } else {
-            System.out.println("Invalid choice!");
-            return;
+            double pricePerItem = 0;
+            while (true) {
+                try {
+                    System.out.print("Enter price per item: $");
+                    pricePerItem = scanner.nextDouble();
+                    if (pricePerItem > 0) {
+                        break;
+                    } else {
+                        System.out.println("  Price must be greater than 0!");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("  Invalid input! Please enter a valid number (e.g., 5.99)");
+                    scanner.nextLine();
+                }
+            }
+
+            service = new Laundry(serviceId, roomNo, items, pricePerItem);
         }
 
         if (service != null) {
             hotelServices.add(service);
-            System.out.println("\n Service requested successfully!");
+            System.out.println("\n  Service requested successfully!");
             service.execute();
         }
     }
@@ -187,48 +268,118 @@ public class Main {
                                          ArrayList<HotelService> hotelServices,
                                          Scanner scanner) {
         if (reservations.isEmpty()) {
-            System.out.println("\n No reservations found! Create a reservation first.\n");
+            System.out.println("\n No reservations found! Create a reservation first (Option 8).\n");
             return;
         }
 
+        // Show all reservations first
         System.out.println("\n===== ALL RESERVATIONS =====");
         for (int j = 0; j < reservations.size(); j++) {
             Reservation r = reservations.get(j);
-            System.out.println("Reservation " + j + " | Guest: " + r.getGuest().getName() +
-                    " | Room: " + r.getRoom().getId() +
-                    " | Status: " + r.getStatus());
+            System.out.println(j + ". Guest: " + r.getGuest().getName() +
+                    "   Room: " + r.getRoom().getId() +
+                    "   Status: " + r.getStatus());
         }
         System.out.println("===========================\n");
 
-        System.out.print("Enter Reservation number (0 to " + (reservations.size() - 1) + "): ");
-        int resId = scanner.nextInt();
 
-        if (resId >= reservations.size() || resId < 0) {
-            System.out.println(" Invalid reservation number!");
-            return;
+        int resId = -1;
+        while (true) {
+            try {
+                System.out.print("Enter Reservation number (0 to " + (reservations.size() - 1) + "): ");
+                resId = scanner.nextInt();
+                scanner.nextLine();
+
+                if (resId >= 0 && resId < reservations.size()) {
+                    break;
+                } else {
+                    System.out.println(" Invalid number! Please enter between 0 and " + (reservations.size() - 1));
+                }
+            } catch (InputMismatchException e) {
+                System.out.println(" Invalid input! Please enter a valid NUMBER.");
+                scanner.nextLine();
+            }
         }
 
         Reservation reservation = reservations.get(resId);
 
-        // Check if reservation is paid
+
         if (!reservation.getStatus().equals("Paid")) {
-            System.out.println("\n This reservation is not paid yet!");
-            System.out.println("Please pay for the reservation first (Option 13)\n");
+            System.out.println("\n This reservation is NOT paid yet!");
+            System.out.println("Please pay for this reservation first (Option 13)\n");
             return;
         }
 
-        System.out.print("Enter extra charges (if any): $");
-        double extra = scanner.nextDouble();
+
+        double extra = 0;
+        while (true) {
+            try {
+                System.out.print("Enter extra charges (if any, press Enter if there is no extra charge): ");
+                String extraInput = scanner.nextLine().trim();
 
 
-        Billable bill = new HotelBill(reservation, hotelServices, extra);
+                if (extraInput.isEmpty()) {
+                    extra = 0;
+                    break;
+                }
+
+                extra = Double.parseDouble(extraInput);
+                if (extra >= 0) {
+                    break;
+                } else {
+                    System.out.println(" Extra charges cannot be negative!");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(" Invalid input! Please enter a valid NUMBER (e.g., 10.50) or press Enter for 0");
+            }
+        }
 
 
-        bill.printBill();
-        System.out.println("Bill Summary: " + bill.getBillSummary());
+        int days = Period.between(reservation.getArrivalDate(), reservation.getDepartureDate()).getDays();
+        double roomTotal = days * reservation.getRoom().getPrice();
+        double discount = roomTotal * (reservation.getGuest().getDiscount() / 100.0);
+        double roomAfterDiscount = roomTotal - discount;
+
+
+        double serviceTotal = 0;
+        System.out.println("\n===== SERVICES REQUESTED =====");
+        if (hotelServices.isEmpty()) {
+            System.out.println("No services requested.");
+        } else {
+            for (HotelService service : hotelServices) {
+                System.out.println("- " + service.getServiceName() + ": " + service.getPrice());
+                serviceTotal += service.getPrice();
+            }
+        }
+        System.out.println("=============================\n");
+
+        double grandTotal = roomAfterDiscount + serviceTotal + extra;
+
+
+        System.out.println("\n═══════════════════════════════════════");
+        System.out.println("           HOTEL FINAL BILL             ");
+        System.out.println("═══════════════════════════════════════");
+        System.out.println("\n ROOM CHARGES:");
+        System.out.println("   Guest: " + reservation.getGuest().getName());
+        System.out.println("   Room #" + reservation.getRoom().getId());
+        System.out.println("   Days: " + days + " x " + reservation.getRoom().getPrice() + " = " + roomTotal);
+        System.out.println("   Discount (" + reservation.getGuest().getDiscount() + "%): -" + discount);
+        System.out.println("   Room Total after discount: " + roomAfterDiscount);
+
+        if (serviceTotal > 0) {
+            System.out.println("\n  SERVICE CHARGES: " + serviceTotal);
+        }
+
+        if (extra > 0) {
+            System.out.println("\n EXTRA CHARGES: " + extra);
+        }
+
+        System.out.println("\n───────────────────────────────────────");
+        System.out.println("  GRAND TOTAL: " + grandTotal);
+        System.out.println("═══════════════════════════════════════\n");
 
 
         hotelServices.clear();
-        System.out.println(" Services cleared from system!\n");
+        System.out.println("  Bill generated successfully! Services cleared.\n");
     }
 }

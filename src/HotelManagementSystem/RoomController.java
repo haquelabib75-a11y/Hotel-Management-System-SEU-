@@ -7,64 +7,42 @@ import java.util.Scanner;
 public class RoomController {
 
     public static void AddNewRoom(ArrayList<Room> rooms, Scanner scanner) {
-        int floor = 0;
-        int capacity = 0;
-        String type = "";
-        String description = "";
-        double price = 0.0;
-
-        // Get floor with validation
-        while (true) {
-            try {
-                System.out.println("Enter floor(int): ");
-                floor = scanner.nextInt();
-                scanner.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a valid integer number for floor.");
-                scanner.nextLine();
+        try {
+            System.out.println("Enter floor(int): ");
+            int floor = scanner.nextInt();
+            if (floor < 0) {
+                throw new InvalidInputException("Floor cannot be negative!");
             }
-        }
 
-        // Get capacity with validation
-        while (true) {
-            try {
-                System.out.println("Enter capacity (int): ");
-                capacity = scanner.nextInt();
-                scanner.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a valid integer number for capacity.");
-                scanner.nextLine();
+            System.out.println("Enter capacity (int): ");
+            int capacity = scanner.nextInt();
+            if (capacity < 1) {
+                throw new InvalidInputException("Capacity must be at least 1!");
             }
-        }
 
-        // Get type (String - no validation needed)
-        System.out.println("Enter type (String): ");
-        type = scanner.nextLine();
-
-        // Get description (String - no validation needed)
-        System.out.println("Enter description (String): ");
-        description = scanner.nextLine();
-
-        // Get price with validation
-        while (true) {
-            try {
-                System.out.println("Enter price (double): ");
-                String priceInput = scanner.nextLine().trim();
-                price = Double.parseDouble(priceInput);
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter a valid number (e.g., 99.99 or 140)");
-                System.out.println("Use dot (.) not comma for decimal places.");
+            scanner.nextLine();
+            System.out.println("Enter type (String): ");
+            String type = scanner.nextLine();
+            System.out.println("Enter description (String): ");
+            String description = scanner.nextLine();
+            System.out.println("Enter price (double): ");
+            double price = scanner.nextDouble();
+            if (price <= 0) {
+                throw new InvalidInputException("Price must be greater than 0!");
             }
-        }
 
-        int id = 1000 + rooms.size();
-        Room room = new Room(rooms.size(), floor, capacity, type, description, price);
-        rooms.add(room);
-        System.out.println("Room added successfully!");
-        System.out.println();
+            Room room = new Room(rooms.size(), floor, capacity, type, description, price);
+            rooms.add(room);
+            System.out.println("Room added successfully!");
+            System.out.println();
+
+        } catch (InvalidInputException e) {
+            System.out.println(" Error: " + e.getMessage());
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println(" Invalid input! Please enter correct data type.");
+            scanner.nextLine();
+        }
     }
 
     public static void showAllRooms(ArrayList<Room> rooms) {
@@ -81,103 +59,75 @@ public class RoomController {
     }
 
     public static void editRoom(ArrayList<Room> rooms, Scanner scanner) {
-        if (rooms.isEmpty()) {
-            System.out.println("No rooms available to edit!");
-            return;
-        }
+        try {
+            if (rooms.isEmpty()) {
+                throw new RoomNotFoundException("No rooms available to edit!");
+            }
 
-        int id = -1;
+            System.out.println("Enter room id (Type -1 to show all rooms): ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
 
-        // Get room id with validation
-        while (true) {
-            try {
-                System.out.println("Enter room id (Type -1 to show all rooms): ");
+            if (id == -1) {
+                showAllRooms(rooms);
+                System.out.println("Enter room id: ");
                 id = scanner.nextInt();
                 scanner.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a valid integer number.");
-                scanner.nextLine();
             }
-        }
 
-        if (id == -1) {
-            showAllRooms(rooms);
-            while (true) {
-                try {
-                    System.out.println("Enter room id: ");
-                    id = scanner.nextInt();
-                    scanner.nextLine();
-                    break;
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input! Please enter a valid integer number.");
-                    scanner.nextLine();
-                }
-            }
-        }
-
-        // Check if room exists
-        if (id >= rooms.size() || id < 0) {
-            System.out.println("Room not found!");
-            return;
-        }
-
-        Room room = getRoomById(id, rooms);
-
-        // Edit floor
-        System.out.println("Enter floor(int) (Type -1 to keep it): ");
-        int floor = scanner.nextInt();
-        scanner.nextLine();
-        if (floor == -1) floor = room.getFloor();
-
-        // Edit capacity
-        System.out.println("Enter capacity (int) (Type -1 to keep it): ");
-        int capacity = scanner.nextInt();
-        scanner.nextLine();
-        if (capacity == -1) capacity = room.getCapacity();
-
-        // Edit type
-        System.out.println("Enter room type (String) (Type -1 to keep it): ");
-        String type = scanner.nextLine();
-        if (type.equals("-1")) type = room.getType();
-
-        // Edit description
-        System.out.println("Enter room description (String) (Type -1 to keep it): ");
-        String description = scanner.nextLine();
-        if (description.equals("-1")) description = room.getDescription();
-
-        // Edit price with validation
-        double price = room.getPrice();
-        while (true) {
+            Room room = null;
             try {
-                System.out.println("Enter room price (double) (Type -1 to keep it): ");
-                String priceInput = scanner.nextLine().trim();
-                if (priceInput.equals("-1")) {
-                    break;
-                }
-                price = Double.parseDouble(priceInput);
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter a valid number (e.g., 99.99)");
-                System.out.println("Use dot (.) not comma for decimal places.");
+                room = getRoomById(id, rooms);
+            } catch (RoomNotFoundException e) {
+                System.out.println(" " + e.getMessage());
+                return;
             }
+
+            System.out.println("Enter floor(int) (Type -1 to keep it): ");
+            int floor = scanner.nextInt();
+            scanner.nextLine();
+            if (floor == -1) floor = room.getFloor();
+
+            System.out.println("Enter capacity (int) (Type -1 to keep it): ");
+            int capacity = scanner.nextInt();
+            scanner.nextLine();
+            if (capacity == -1) capacity = room.getCapacity();
+
+            System.out.println("Enter room type (String) (Type -1 to keep it): ");
+            String type = scanner.nextLine();
+            if (type.equals("-1")) type = room.getType();
+
+            System.out.println("Enter room description (String) (Type -1 to keep it): ");
+            String description = scanner.nextLine();
+            if (description.equals("-1")) description = room.getDescription();
+
+            System.out.println("Enter room price (double) (Type -1 to keep it): ");
+            double price = scanner.nextDouble();
+            scanner.nextLine();
+            if (price == -1) price = room.getPrice();
+
+            room.setFloor(floor);
+            room.setCapacity(capacity);
+            room.setType(type);
+            room.setDescription(description);
+            room.setPrice(price);
+
+            System.out.println("Room edited successfully!");
+
+        } catch (RoomNotFoundException e) {
+            System.out.println(" " + e.getMessage());
+        } catch (InputMismatchException e) {
+            System.out.println(" Invalid input! Please enter correct data type.");
+            scanner.nextLine();
         }
-
-        room.setFloor(floor);
-        room.setCapacity(capacity);
-        room.setType(type);
-        room.setDescription(description);
-        room.setPrice(price);
-
-        System.out.println("Room edited successfully!");
     }
 
-    public static Room getRoomById(int id, ArrayList<Room> rooms) {
-        for (Room r : rooms) {
-            if (r.getId() == id) {
-                return r;
+    public static Room getRoomById(int id, ArrayList<Room> rooms) throws RoomNotFoundException {
+        for (Room room : rooms) {
+            if (room.getId() == id) {
+                return room;
             }
         }
-        return null;
+        throw new RoomNotFoundException("Room with ID " + id + " not found!");
     }
 }

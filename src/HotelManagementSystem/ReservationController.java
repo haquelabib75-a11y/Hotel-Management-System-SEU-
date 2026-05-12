@@ -16,7 +16,6 @@ public class ReservationController {
         LocalDate arrivalDate = null;
         LocalDate departureDate = null;
 
-
         while (true) {
             try {
                 System.out.println("Enter arrival date (yyyy-MM-dd): ");
@@ -98,7 +97,14 @@ public class ReservationController {
         }
 
         Guest guest = guests.get(guestId);
-        Room room = RoomController.getRoomById(roomId, rooms);
+
+        Room room = null;
+        try {
+            room = RoomController.getRoomById(roomId, rooms);
+        } catch (RoomNotFoundException e) {
+            System.out.println(" " + e.getMessage());
+            return;
+        }
 
         if (room.isReserved(arrivalDate, departureDate)) {
             System.out.println("This room is reserved!");
@@ -304,7 +310,14 @@ public class ReservationController {
         }
 
         Guest guest = reservation.getGuest();
-        Room room = RoomController.getRoomById(roomId, rooms);
+
+        Room room = null;
+        try {
+            room = RoomController.getRoomById(roomId, rooms);
+        } catch (RoomNotFoundException e) {
+            System.out.println(" " + e.getMessage());
+            return;
+        }
 
         if (room.isReserved(arrivalDate, departureDate)) {
             System.out.println("This room is reserved!");
@@ -369,7 +382,6 @@ public class ReservationController {
             System.out.println("This reservation is already paid!");
         }
     }
-
 
     private static int getMaxDaysInMonth(int month) {
         switch (month) {
