@@ -24,7 +24,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int i = 0;
 
-        while (i != 20) {
+        while (i != 23) {
             System.out.println("Welcome to the Hotel Management System");
             System.out.println("1. Add new room");
             System.out.println("2. Show all rooms");
@@ -45,17 +45,20 @@ public class Main {
             System.out.println("17. Request Hotel Service");
             System.out.println("18. Show All Services");
             System.out.println("19. Generate Final Bill");
-            System.out.println("20. Exit");
+            System.out.println("20. Exit without saving");
+            System.out.println("21. Save all data to file");
+            System.out.println("22. Load all data from file");
+            System.out.println("23. Save and Exit");
             System.out.print("Enter your choice: ");
 
             while (true) {
                 try {
                     i = scanner.nextInt();
                     scanner.nextLine();
-                    if (i >= 1 && i <= 20) {
+                    if (i >= 1 && i <= 23) {
                         break;
                     } else {
-                        System.out.println(" Please enter a number between 1 and 20!");
+                        System.out.println(" Please enter a number between 1 and 23!");
                     }
                 } catch (InputMismatchException e) {
                     System.out.println(" Invalid input! Please enter a NUMBER between 1 and 20.");
@@ -125,8 +128,20 @@ public class Main {
                     System.out.println("Exiting Hotel Management System. Goodbye!");
                     scanner.close();
                     break;
+                case 21:
+                    FileManager.saveAllData(rooms, guests, employees, reservations, hotelServices);
+                    break;
+                case 22:
+                    FileManager.loadAllData(rooms, guests, employees, reservations, hotelServices);
+                    break;
+                case 23:
+                    System.out.println("Saving data before exit...");
+                    FileManager.saveAllData(rooms, guests, employees, reservations, hotelServices);
+                    System.out.println("Exiting Hotel Management System. Goodbye!");
+                    scanner.close();
+                    return;
                 default:
-                    System.out.println("Invalid choice! Please enter a number between 1-20.");
+                    System.out.println("Invalid choice! Please enter a number between 1-23.");
             }
         }
     }

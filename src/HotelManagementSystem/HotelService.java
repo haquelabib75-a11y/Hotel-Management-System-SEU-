@@ -1,6 +1,8 @@
 package HotelManagementSystem;
+import java.io.Serializable;
 
-public abstract class HotelService {
+public abstract class HotelService implements Serializable{
+    private static final long serialVersionUID = 1L;
     protected String serviceId;
     protected String serviceName;
     protected double price;

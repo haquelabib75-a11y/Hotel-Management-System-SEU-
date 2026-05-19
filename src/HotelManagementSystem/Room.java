@@ -2,8 +2,12 @@ package HotelManagementSystem;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Room {
+
+public class Room implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private int id;
     private int floor;
     private int capacity;

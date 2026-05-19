@@ -2,15 +2,18 @@ package HotelManagementSystem;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.Period;
+import java.io.Serializable;
 
-public class Reservation {
+public class Reservation implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private LocalDate arrivalDate;
     private LocalDate departureDate;
     private double price;
     private String status;
     private Guest guest;
     private Room room;
-    private DateTimeFormatter formatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private transient DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Reservation(LocalDate arrivalDate, LocalDate departureDate, double price, String status, Guest guest,Room room) {
         this.arrivalDate= arrivalDate;
@@ -19,6 +22,7 @@ public class Reservation {
         this.status= status;
         this.guest= guest;
         this.room= room;
+        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     }
     public Reservation() {}
 

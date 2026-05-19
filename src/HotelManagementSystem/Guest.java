@@ -1,6 +1,8 @@
 package HotelManagementSystem;
+import java.io.Serializable;
 
-public class Guest {
+public class Guest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private int id;
     private String name;

@@ -5,6 +5,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ReservationController {
@@ -43,7 +44,6 @@ public class ReservationController {
             }
         }
 
-
         while (true) {
             try {
                 System.out.println("Enter departure date (yyyy-MM-dd): ");
@@ -76,24 +76,64 @@ public class ReservationController {
             }
         }
 
+        // Guest ID input with validation - FIXED
         System.out.println("Enter guest id (int): ");
         System.out.println("-1 to search guest by name");
-        int guestId = scanner.nextInt();
+        int guestId = -1;
+        while (true) {
+            try {
+                guestId = scanner.nextInt();
+                scanner.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a NUMBER (or -1 to search by name)");
+                scanner.nextLine();
+            }
+        }
 
         if (guestId == -1) {
             GuestController.searchGuestByName(guests, scanner);
             System.out.println("Enter guest id (int): ");
-            guestId = scanner.nextInt();
+            while (true) {
+                try {
+                    guestId = scanner.nextInt();
+                    scanner.nextLine();
+                    break;
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input! Please enter a valid NUMBER for guest ID.");
+                    scanner.nextLine();
+                }
+            }
         }
 
+        // Room ID input with validation - FIXED
         System.out.println("Enter room id (int): ");
         System.out.println("-1 to show all rooms");
-        int roomId = scanner.nextInt();
+        int roomId = -1;
+        while (true) {
+            try {
+                roomId = scanner.nextInt();
+                scanner.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a NUMBER (or -1 to show all rooms)");
+                scanner.nextLine();
+            }
+        }
 
         if (roomId == -1) {
             RoomController.showAllRooms(rooms);
             System.out.println("Enter room id (int): ");
-            roomId = scanner.nextInt();
+            while (true) {
+                try {
+                    roomId = scanner.nextInt();
+                    scanner.nextLine();
+                    break;
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input! Please enter a valid NUMBER for room ID.");
+                    scanner.nextLine();
+                }
+            }
         }
 
         Guest guest = guests.get(guestId);
