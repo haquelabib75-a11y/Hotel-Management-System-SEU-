@@ -176,3 +176,89 @@ public class MainFrame extends JFrame {
             displayArea.append("---------------------------------\n\n");
         }
     }
+     private void addGuestDialog() {
+        JTextField nameField = new JTextField();
+        JTextField emailField = new JTextField();
+        JTextField discountField = new JTextField();
+        
+        Object[] message = {
+            "Name:", nameField,
+            "Email:", emailField,
+            "Discount (%):", discountField
+        };
+        
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Guest", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            try {
+                String name = nameField.getText();
+                String email = emailField.getText();
+                int discount = Integer.parseInt(discountField.getText());
+                
+                Guest guest = new Guest(guests.size(), name, email, discount);
+                guests.add(guest);
+                displayArea.append("Guest added successfully!\n");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid discount! Please enter a number.");
+            }
+        }
+    }
+    
+    private void showGuests() {
+        displayArea.setText("");
+        if (guests.isEmpty()) {
+            displayArea.append("No guests available.\n");
+            return;
+        }
+        for (Guest guest : guests) {
+            displayArea.append("----------------\n");
+            displayArea.append("ID: " + guest.getId() + "\n");
+            displayArea.append("Name: " + guest.getName() + "\n");
+            displayArea.append("Email: " + guest.getEmail() + "\n");
+            displayArea.append("Discount: " + guest.getDiscount() + "%\n");
+            displayArea.append("----------------\n\n");
+        }
+    }
+    
+ private void addGuestDialog() {
+        JTextField nameField = new JTextField();
+        JTextField emailField = new JTextField();
+        JTextField discountField = new JTextField();
+        
+        Object[] message = {
+            "Name:", nameField,
+            "Email:", emailField,
+            "Discount (%):", discountField
+        };
+        
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Guest", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            try {
+                String name = nameField.getText();
+                String email = emailField.getText();
+                int discount = Integer.parseInt(discountField.getText());
+                
+                Guest guest = new Guest(guests.size(), name, email, discount);
+                guests.add(guest);
+                displayArea.append("Guest added successfully!\n");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid discount! Please enter a number.");
+            }
+        }
+    }
+    
+    private void showGuests() {
+        displayArea.setText("");
+        if (guests.isEmpty()) {
+            displayArea.append("No guests available.\n");
+            return;
+        }
+        for (Guest guest : guests) {
+            displayArea.append("----------------\n");
+            displayArea.append("ID: " + guest.getId() + "\n");
+            displayArea.append("Name: " + guest.getName() + "\n");
+            displayArea.append("Email: " + guest.getEmail() + "\n");
+            displayArea.append("Discount: " + guest.getDiscount() + "%\n");
+            displayArea.append("----------------\n\n");
+        }
+    }
+    
