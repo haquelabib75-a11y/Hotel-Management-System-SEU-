@@ -262,3 +262,45 @@ public class MainFrame extends JFrame {
         }
     }
     
+private void addEmployeeDialog() {
+        JTextField nameField = new JTextField();
+        JTextField salaryField = new JTextField();
+        JTextField jobField = new JTextField();
+        
+        Object[] message = {
+            "Name:", nameField,
+            "Salary:", salaryField,
+            "Job:", jobField
+        };
+        
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Employee", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            try {
+                String name = nameField.getText();
+                double salary = Double.parseDouble(salaryField.getText());
+                String job = jobField.getText();
+                
+                Employee emp = new Employee(employees.size(), name, salary, job);
+                employees.add(emp);
+                displayArea.append("Employee added successfully!\n");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid salary! Please enter a number.");
+            }
+        }
+    }
+    
+    private void showEmployees() {
+        displayArea.setText("");
+        if (employees.isEmpty()) {
+            displayArea.append("No employees available.\n");
+            return;
+        }
+        for (Employee emp : employees) {
+            displayArea.append("-------------------\n");
+            displayArea.append("ID: " + emp.getID() + "\n");
+            displayArea.append("Name: " + emp.getName() + "\n");
+            displayArea.append("Salary: $" + emp.getSalary() + "\n");
+            displayArea.append("Job: " + emp.getJob() + "\n");
+            displayArea.append("-------------------\n\n");
+        }
+    }
