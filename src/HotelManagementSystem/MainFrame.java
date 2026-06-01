@@ -2,6 +2,8 @@ package HotelManagementSystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
@@ -176,24 +178,25 @@ public class MainFrame extends JFrame {
             displayArea.append("---------------------------------\n\n");
         }
     }
-     private void addGuestDialog() {
+
+    private void addGuestDialog() {
         JTextField nameField = new JTextField();
         JTextField emailField = new JTextField();
         JTextField discountField = new JTextField();
-        
+
         Object[] message = {
-            "Name:", nameField,
-            "Email:", emailField,
-            "Discount (%):", discountField
+                "Name:", nameField,
+                "Email:", emailField,
+                "Discount (%):", discountField
         };
-        
+
         int option = JOptionPane.showConfirmDialog(this, message, "Add Guest", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             try {
                 String name = nameField.getText();
                 String email = emailField.getText();
                 int discount = Integer.parseInt(discountField.getText());
-                
+
                 Guest guest = new Guest(guests.size(), name, email, discount);
                 guests.add(guest);
                 displayArea.append("Guest added successfully!\n");
@@ -202,7 +205,7 @@ public class MainFrame extends JFrame {
             }
         }
     }
-    
+
     private void showGuests() {
         displayArea.setText("");
         if (guests.isEmpty()) {
@@ -218,68 +221,25 @@ public class MainFrame extends JFrame {
             displayArea.append("----------------\n\n");
         }
     }
-    
- private void addGuestDialog() {
-        JTextField nameField = new JTextField();
-        JTextField emailField = new JTextField();
-        JTextField discountField = new JTextField();
-        
-        Object[] message = {
-            "Name:", nameField,
-            "Email:", emailField,
-            "Discount (%):", discountField
-        };
-        
-        int option = JOptionPane.showConfirmDialog(this, message, "Add Guest", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            try {
-                String name = nameField.getText();
-                String email = emailField.getText();
-                int discount = Integer.parseInt(discountField.getText());
-                
-                Guest guest = new Guest(guests.size(), name, email, discount);
-                guests.add(guest);
-                displayArea.append("Guest added successfully!\n");
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid discount! Please enter a number.");
-            }
-        }
-    }
-    
-    private void showGuests() {
-        displayArea.setText("");
-        if (guests.isEmpty()) {
-            displayArea.append("No guests available.\n");
-            return;
-        }
-        for (Guest guest : guests) {
-            displayArea.append("----------------\n");
-            displayArea.append("ID: " + guest.getId() + "\n");
-            displayArea.append("Name: " + guest.getName() + "\n");
-            displayArea.append("Email: " + guest.getEmail() + "\n");
-            displayArea.append("Discount: " + guest.getDiscount() + "%\n");
-            displayArea.append("----------------\n\n");
-        }
-    }
-    
-private void addEmployeeDialog() {
+
+    private void addEmployeeDialog() {
         JTextField nameField = new JTextField();
         JTextField salaryField = new JTextField();
         JTextField jobField = new JTextField();
-        
+
         Object[] message = {
-            "Name:", nameField,
-            "Salary:", salaryField,
-            "Job:", jobField
+                "Name:", nameField,
+                "Salary:", salaryField,
+                "Job:", jobField
         };
-        
+
         int option = JOptionPane.showConfirmDialog(this, message, "Add Employee", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             try {
                 String name = nameField.getText();
                 double salary = Double.parseDouble(salaryField.getText());
                 String job = jobField.getText();
-                
+
                 Employee emp = new Employee(employees.size(), name, salary, job);
                 employees.add(emp);
                 displayArea.append("Employee added successfully!\n");
@@ -288,7 +248,7 @@ private void addEmployeeDialog() {
             }
         }
     }
-    
+
     private void showEmployees() {
         displayArea.setText("");
         if (employees.isEmpty()) {
@@ -303,49 +263,51 @@ private void addEmployeeDialog() {
             displayArea.append("Job: " + emp.getJob() + "\n");
             displayArea.append("-------------------\n\n");
         }
-        private void createReservationDialog() {
+    }
+
+    private void createReservationDialog() {
         if (guests.isEmpty() || rooms.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please add guests and rooms first!");
             return;
         }
-        
+
         JComboBox<Guest> guestCombo = new JComboBox<>();
         for (Guest g : guests) {
             guestCombo.addItem(g);
         }
-        
+
         JComboBox<Room> roomCombo = new JComboBox<>();
         for (Room r : rooms) {
             roomCombo.addItem(r);
         }
-        
+
         JTextField arrivalField = new JTextField();
         JTextField departureField = new JTextField();
-        
+
         Object[] message = {
-            "Guest:", guestCombo,
-            "Room:", roomCombo,
-            "Arrival Date (yyyy-MM-dd):", arrivalField,
-            "Departure Date (yyyy-MM-dd):", departureField
+                "Guest:", guestCombo,
+                "Room:", roomCombo,
+                "Arrival Date (yyyy-MM-dd):", arrivalField,
+                "Departure Date (yyyy-MM-dd):", departureField
         };
-        
+
         int option = JOptionPane.showConfirmDialog(this, message, "Create Reservation", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             try {
                 Guest selectedGuest = (Guest) guestCombo.getSelectedItem();
                 Room selectedRoom = (Room) roomCombo.getSelectedItem();
-                
+
                 LocalDate arrival = LocalDate.parse(arrivalField.getText());
                 LocalDate departure = LocalDate.parse(departureField.getText());
-                
+
                 int days = Period.between(arrival, departure).getDays();
                 double total = days * selectedRoom.getPrice();
                 double discount = total * selectedGuest.getDiscount() / 100.0;
                 double finalTotal = total - discount;
-                
+
                 Reservation res = new Reservation(arrival, departure, finalTotal, "Reserved", selectedGuest, selectedRoom);
                 reservations.add(res);
-                
+
                 displayArea.append("Reservation created successfully!\n");
                 displayArea.append("Total after discount: $" + finalTotal + "\n");
             } catch (Exception ex) {
@@ -353,7 +315,7 @@ private void addEmployeeDialog() {
             }
         }
     }
-    
+
     private void showReservations() {
         displayArea.setText("");
         if (reservations.isEmpty()) {
@@ -371,27 +333,27 @@ private void addEmployeeDialog() {
             displayArea.append("-------------------------------------\n\n");
         }
     }
-    
+
     private void requestServiceDialog() {
         String[] services = {"Food Delivery", "Laundry Service"};
         String selected = (String) JOptionPane.showInputDialog(this, "Select Service:", "Request Service",
-            JOptionPane.QUESTION_MESSAGE, null, services, services[0]);
-        
+                JOptionPane.QUESTION_MESSAGE, null, services, services[0]);
+
         if (selected != null) {
             JTextField roomField = new JTextField();
             Object[] message = {"Room Number:", roomField};
-            
+
             int option = JOptionPane.showConfirmDialog(this, message, selected, JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
                 String serviceId = "SVC" + (hotelServices.size() + 1);
                 HotelService service = null;
-                
+
                 if (selected.equals("Food Delivery")) {
                     JTextField foodField = new JTextField();
                     JTextField priceField = new JTextField();
                     JTextField qtyField = new JTextField();
                     Object[] foodMsg = {"Food Item:", foodField, "Price per item:", priceField, "Quantity:", qtyField};
-                    
+
                     int foodOption = JOptionPane.showConfirmDialog(this, foodMsg, "Food Delivery", JOptionPane.OK_CANCEL_OPTION);
                     if (foodOption == JOptionPane.OK_OPTION) {
                         String food = foodField.getText();
@@ -403,7 +365,7 @@ private void addEmployeeDialog() {
                     JTextField itemsField = new JTextField();
                     JTextField priceField = new JTextField();
                     Object[] laundryMsg = {"Number of items:", itemsField, "Price per item:", priceField};
-                    
+
                     int laundryOption = JOptionPane.showConfirmDialog(this, laundryMsg, "Laundry Service", JOptionPane.OK_CANCEL_OPTION);
                     if (laundryOption == JOptionPane.OK_OPTION) {
                         int items = Integer.parseInt(itemsField.getText());
@@ -411,7 +373,7 @@ private void addEmployeeDialog() {
                         service = new Laundry(serviceId, roomField.getText(), items, price);
                     }
                 }
-                
+
                 if (service != null) {
                     hotelServices.add(service);
                     displayArea.append("Service requested successfully!\n");
@@ -420,76 +382,78 @@ private void addEmployeeDialog() {
             }
         }
     }
-    
+
     private void generateBillDialog() {
         if (reservations.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No reservations found!");
             return;
         }
-        
+
         JComboBox<Reservation> resCombo = new JComboBox<>();
         for (Reservation r : reservations) {
             if (r.getStatus().equals("Paid")) {
                 resCombo.addItem(r);
             }
         }
-        
+
         if (resCombo.getItemCount() == 0) {
             JOptionPane.showMessageDialog(this, "No paid reservations found!");
             return;
         }
-        
+
         JTextField extraField = new JTextField();
         Object[] message = {"Reservation:", resCombo, "Extra Charges:", extraField};
-        
+
         int option = JOptionPane.showConfirmDialog(this, message, "Generate Bill", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            Reservation selected = (Reservation) resCombo.getSelectedItem();
-            double extra = Double.parseDouble(extraField.getText());
-            
-            int days = Period.between(selected.getArrivalDate(), selected.getDepartureDate()).getDays();
-            double roomTotal = days * selected.getRoom().getPrice();
-            double discount = roomTotal * selected.getGuest().getDiscount() / 100.0;
-            double roomAfterDiscount = roomTotal - discount;
-            
-            double serviceTotal = 0;
-            for (HotelService s : hotelServices) {
-                serviceTotal += s.getPrice();
+            try {
+                Reservation selected = (Reservation) resCombo.getSelectedItem();
+                double extra = Double.parseDouble(extraField.getText());
+
+                int days = Period.between(selected.getArrivalDate(), selected.getDepartureDate()).getDays();
+                double roomTotal = days * selected.getRoom().getPrice();
+                double discount = roomTotal * selected.getGuest().getDiscount() / 100.0;
+                double roomAfterDiscount = roomTotal - discount;
+
+                double serviceTotal = 0;
+                for (HotelService s : hotelServices) {
+                    serviceTotal += s.getPrice();
+                }
+
+                double grandTotal = roomAfterDiscount + serviceTotal + extra;
+
+                displayArea.setText("");
+                displayArea.append("========== HOTEL FINAL BILL ==========\n");
+                displayArea.append("Guest: " + selected.getGuest().getName() + "\n");
+                displayArea.append("Room: " + selected.getRoom().getId() + "\n");
+                displayArea.append("Days: " + days + "\n");
+                displayArea.append("Room Total: $" + roomTotal + "\n");
+                displayArea.append("Discount: -$" + discount + "\n");
+                displayArea.append("Room After Discount: $" + roomAfterDiscount + "\n");
+                displayArea.append("Service Charges: $" + serviceTotal + "\n");
+                displayArea.append("Extra Charges: $" + extra + "\n");
+                displayArea.append("=======================================\n");
+                displayArea.append("GRAND TOTAL: $" + grandTotal + "\n");
+                displayArea.append("=======================================\n");
+
+                hotelServices.clear();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid extra charges! Please enter a number.");
             }
-            
-            double grandTotal = roomAfterDiscount + serviceTotal + extra;
-            
-            displayArea.setText("");
-            displayArea.append("========== HOTEL FINAL BILL ==========\n");
-            displayArea.append("Guest: " + selected.getGuest().getName() + "\n");
-            displayArea.append("Room: " + selected.getRoom().getId() + "\n");
-            displayArea.append("Days: " + days + "\n");
-            displayArea.append("Room Total: $" + roomTotal + "\n");
-            displayArea.append("Discount: -$" + discount + "\n");
-            displayArea.append("Room After Discount: $" + roomAfterDiscount + "\n");
-            displayArea.append("Service Charges: $" + serviceTotal + "\n");
-            displayArea.append("Extra Charges: $" + extra + "\n");
-            displayArea.append("=======================================\n");
-            displayArea.append("GRAND TOTAL: $" + grandTotal + "\n");
-            displayArea.append("=======================================\n");
-            
-            hotelServices.clear();
         }
     }
-    
+
     private void saveData() {
         FileManager.saveAllData(rooms, guests, employees, reservations, hotelServices);
         displayArea.append("Data saved successfully!\n");
     }
-    
+
     private void loadData() {
         FileManager.loadAllData(rooms, guests, employees, reservations, hotelServices);
         displayArea.append("Data loaded successfully!\n");
     }
-    
+
     private void showAbout() {
         JOptionPane.showMessageDialog(this, "Hotel Management System\nVersion 1.0\n\nCreated for CSB232");
     }
 }
-
-    }
